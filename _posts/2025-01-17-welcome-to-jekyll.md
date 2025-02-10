@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Welcome to Jekyll"
+title: "foris's blog"
 date:   2025-01-17
 # tags: jekyll update
 color: rgb(255,90,90)

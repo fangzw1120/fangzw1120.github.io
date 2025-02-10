@@ -41,12 +41,12 @@ published: true
 
 3.  **LM Studio:**
     *   LM Studio 是一个图形用户界面的本地大模型运行和管理工具，操作直观友好，无需命令行，让非技术用户也能轻松体验本地大模型。
-    *   您可以使用 LM Studio 下载、运行和测试各种兼容的大模型，通过自带的聊天界面与模型对话，或将模型以 API 服务器模式运行。 [Image of LM Studio interface]
+    *   您可以使用 LM Studio 下载、运行和测试各种兼容的大模型，通过自带的聊天界面与模型对话，或将模型以 API 服务器模式运行。 
     *   LM Studio 适合希望通过图形界面快速体验本地大模型、无需复杂配置的普通用户和爱好者。
 
 4.  **GPT4All:**
     *   GPT4All 是另一个开源的 GUI 本地大模型平台，同样注重易用性，提供图形界面进行模型下载、运行和管理。
-    *   您可以使用 GPT4All  体验其自带的模型生态和 Hugging Face Hub  上的各种模型，进行聊天对话和文本嵌入向量生成等操作。 [Image of GPT4All interface]
+    *   您可以使用 GPT4All  体验其自带的模型生态和 Hugging Face Hub  上的各种模型，进行聊天对话和文本嵌入向量生成等操作。
     *   GPT4All 适合希望通过图形界面快速体验本地大模型、并探索聊天和嵌入功能的非技术用户。
 
 5.  **vLLM (Versatile LLM):**

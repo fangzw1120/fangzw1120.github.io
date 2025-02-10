@@ -1,5 +1,11 @@
 Hello everybody, welcome to fangzw1120.github.io.
 
+## 2025 RoadMap
+- 大数据、AI工具相关的blog更新，作为笔记类的blog
+- 日常新闻、热点信息的获取（xiaohu、aitool），feed流搭建
+- 基于blog知识库的AI问答搭建
+- 公众号开启，coze 关于微信公众号bot的搭建，获取关注的信息
+
 ## HardCandy-Jekyll
 
 ### Preview
