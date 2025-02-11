@@ -29,7 +29,7 @@ published: true
     *   **ActiveStandbyElector (ZKFC 内部组件):**  **主备选举器**，与 ZooKeeper 交互，进行主备选举，管理 ZooKeeper 上的选举相关节点。
 
 *   **DataNode 节点:**
-    *   **功能:**  **数据块存储节点**。  DataNode 同时向 Active NN 和 Standby NN **汇报数据块位置信息**，实现数据块元数据共享。
+    *   **功能:**  **数据块存储节点**。  DataNode 同时向 Active NN 和 Standby NN 网络通信发送 **汇报数据块位置信息**，实现数据块元数据共享。
 
 
 
@@ -84,6 +84,10 @@ YARN ResourceManager 的主备切换流程与 HDFS NameNode 类似，但更加�
 
 *   **元数据管理:**  YARN ResourceManager  **不依赖共享存储系统 (如 QJM) 进行元数据同步**，而是将 **状态信息直接存储在 ZooKeeper** 上，Standby RM 从 ZooKeeper 同步状态信息。  这简化了 YARN RM HA 的架构。
 *   **脑裂问题:**  YARN ResourceManager  架构中，脑裂问题的风险和影响相对较小。
+
+
+**与 spark HA 的区别**
+* spark HA 和 yarn HA 比较类似，spark 的主 master 节点向 zookeeper 发送心跳， zookeeper 提供选举和主节点信息的存储；从而保证高可用；
 
 
 
