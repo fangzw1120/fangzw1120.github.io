@@ -22,6 +22,7 @@ published: true
 
 #### 数据采集
 + Flume
+> flume 来自于文件、端口、kafka，输出hdfs、kafka、es；和logstash区别只是没有hdfs
 + Logstash
 + Filebeat
 
@@ -42,6 +43,7 @@ published: true
 + 批处理框架：MapReduce
 + 流处理框架：Storm
 + 混合处理框架：Spark、Flink
+> 流数据是流式不断计算的，因为有checkpoint机制，保证容错和恢复, 滚动窗口、滑动窗口、会话窗口
 
 #### 分布式基础组件
 + Zookeeper
