@@ -22,8 +22,9 @@ published: true
 
 #### 数据采集
 + Flume
-> flume 来自于文件、端口、kafka，输出hdfs、kafka、es；和logstash区别只是没有hdfs
+> flume 来自于文件、端口、kafka，输出hdfs、kafka、es；和logstash区别只是没有hdfs；瓶颈在于写入sink，分布式
 + Logstash
+> 社区活跃、支持的插件丰富、插件化的编排，瓶颈在于filter，集中式pipeline
 + Filebeat
 
 #### 数据迁移

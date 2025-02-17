@@ -95,6 +95,7 @@ Metastore 负责存储 Hive 元数据 (表名、结构、分区等)。
 *   **Streamtable Hint (STREAMTABLE):**  多表 JOIN 优化，指定最大表为流表，缓存小表，流式扫描大表。 需手动指定，不当使用可能降低性能。
 *   **MapJoin Hint (MAPJOIN):**  小表 JOIN 优化，小表全量加载内存，Map 端完成 JOIN，无需 Reduce。 小表必须足够小，避免 OOM。 Hive 会自动优化，Hint 可显式启用。
 *   **索引表 (Indexed Table - *不推荐使用*):**  为列创建索引表，缩小扫描范围。 **致命缺陷：索引不会自动 rebuild，易数据不一致，维护成本高，已过时**。 现代 Hive 优化技术更先进，不依赖索引表。
+*   **关联小表在前：** Hive: 小表通常应该放在 JOIN 语句的 前面 (最左侧)，原因是多表关联的时候AB表的结果会 shuffle 进行c表关联，小表在前可以使得shuffle 数据量尽量小。MySQL: 表的顺序对现代 MySQL 版本的性能影响很小，甚至可以忽略不计。
 
 **面试常问：  Hive 有哪些优化方法？  Streamtable 和 MapJoin Hint 的原理和用法？  了解 Hive 索引吗？  为什么不推荐使用？**
 
