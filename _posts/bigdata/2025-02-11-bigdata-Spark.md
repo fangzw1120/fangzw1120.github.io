@@ -9,8 +9,13 @@ subtitle: 'Big Data - Spark'
 published: true
 ---
 
+> 多数据源接入、client/cluster、local/standalone/yarn/k8s、流批一体、sql/Rdd/mllib/graphx/streaming
 
-**核心优势 (性能保证):**
+> DAG（类似mysql/hiveSQL，语法树 - 优化器 - 任务生成）、宽窄依赖、延迟计算、shuffle（filter减少数据量、提高shuffle并行度、增加内存、broadcast、算子优化reduceByKey代替groupByKey因为map阶段combine、sort-based shuffle）
+
+> streaming 的推拉模式
+
+### **核心优势 (性能保证):**
 
 *   DAG 从 **全局视角** 展现计算流程，实现全局优化和高效容错。
 *   部署灵活、多数据源接入、流批计算、丰富高级API
@@ -19,7 +24,7 @@ published: true
 *   RDD 和 DataSet/DataFrame、spark SQL 的优劣势
 *   spark Streaming 数据接入的推和拉
 
-**核心特点:**
+### **核心特点:**
 
 ![25_02_11_Spark](../../../assets/202502/25_02_11_Spark.png)
 
@@ -28,18 +33,18 @@ published: true
 *   **多计算模式:**  支持 **批处理**、**流处理** 和 **复杂业务分析**。
 *   **类库丰富:**  内置 **SQL**、**MLlib (机器学习)**、**GraphX (图计算)** 和 **Spark Streaming (流处理)** 等
 
-**核心执行流程:**
+### **核心执行流程:**
 
 *   Driver Program 启动，**类似 YARN 的 Application Master**，创建 SparkContext，连接到 Master 节点 (集群管理器)。
-*   Master 节点 为应用分配资源，指示 Worker 节点 **类似 YARN 的 NodeManager** 启动 Executor 进程。**类似 YARN 的 Resource Manager**
+*   Master 节点 为应用分配资源，指示 Worker 节点 **类似 YARN 的 NodeManager** 启动 Executor 进程。**类似 YARN 的 Resource Manager**（如果是在stanalone模式，多数职责yarn负责，master负责application内部的协调，例如监控、调度协调、和app master的通信）
 *   Driver 将程序划分为 Task，并发送给 Executor 进程。
 *   Executor 进程 **类似 YARN 的 Container** 执行 Task，将状态汇报给 Driver Program，并将资源使用情况汇报给 Master 节点。
 
-**Spark 作业提交模式:**
+### **Spark 作业提交模式:**
 
-| 模式                | Client 模式 (客户端模式)                                         | Cluster 模式 (集群模式)                                        | Local 模式 (本地模式)                                        | Standalone vs YARN                                                                     |
-| ------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| **总结**             | **Client 和 Driver 同 JVM，Client 不可关闭，日志终端可见**                     | **Client 和 Driver 分离，Client 可退出，日志需集群系统查看**                     | **所有组件同 JVM 运行，本地模拟分布式**                               | **资源管理方式不同，执行流程类似**                                                             |
+| 模式   | Client 模式 (客户端模式)       | Cluster 模式 (集群模式)   | Local 模式 (本地模式)    | Standalone vs YARN     |
+| ------------------- | ------------------- | ------------------- | ------------------- | ------------------- |
+| **总结** | **Client 和 Driver 同 JVM，Client 不可关闭，日志终端可见**      | **Client 和 Driver 分离，Client 可退出，日志需集群系统查看**      | **所有组件同 JVM 运行，本地模拟分布式**      | **资源管理方式不同，执行流程类似** yarn 只支持粗粒度，mesos支持粗和细两种粒度        |
 
 
 
@@ -65,33 +70,30 @@ published: true
 
 ![25_02_11_spark_wide_deps](../../../assets/202502/25_02_11_spark_wide_deps.png)
 
-| 特性     | 窄依赖 (Narrow Dependency)                                     | 宽依赖 (Wide Dependency)                                     |
-| -------- | ------------------------------------------------------------- | ------------------------------------------------------------- |
-| **Pipeline** | 支持流水线计算 (Pipeline)                                  | 不支持流水线计算                                                |
-| **Shuffle** | 无 Shuffle                                                  | 涉及 Shuffle                                                  |
-| **性能**     | 高效                                                       | 低效                                                       |
-| **容错**     | 容错性高，数据恢复快 (只需重算父 RDD 对应分区)                              | 容错性相对较低，数据恢复慢 (可能需重算所有父分区并再次 Shuffle)                         |
-| **本质**     | 父 RDD 分区与子 RDD 分区 **一对一** 或 **多对一** 的依赖关系             | 子 RDD 分区依赖于 **多个** 父 RDD 分区                               |
-| **适用场景** | 数据清洗、转换、过滤等                                        | 分组聚合、排序、Join 等需要跨分区数据交互的操作                               |
-| **总结**     | **窄依赖高效，功能有限；宽依赖功能强大，但性能开销大**                 | **优先使用窄依赖，避免不必要的宽依赖**                               |
+| 特性     | 窄依赖 (Narrow Dependency)   | 宽依赖 (Wide Dependency)    |
+| -------- | -------- | -------- |
+| **Pipeline** | 支持流水线计算 (Pipeline)          | 不支持流水线计算      |
+| **Shuffle** | 无 Shuffle   | 涉及 Shuffle         |
+| **性能**     | 高效                 | 低效                   |
+| **容错**     | 容错性高，数据恢复快 (只需重算父 RDD 对应分区)  | 容错性相对较低，数据恢复慢 (可能需重算所有父分区并再次 Shuffle)   |
+| **本质**     | 父 RDD 分区与子 RDD 分区 **一对一** 或 **多对一** 的依赖关系      | 子 RDD 分区依赖于 **多个** 父 RDD 分区    |
+| **适用场景** | 数据清洗、转换、过滤等                 | 分组聚合、排序、Join 等需要跨分区数据交互的操作   |
+| **总结**     | **窄依赖高效，功能有限；宽依赖功能强大，但性能开销大**    | **优先使用窄依赖，避免不必要的宽依赖**   |
 
 > 宽依赖是 Stage 划分的边界。一个 Spark 作业会被划分为多个 Stage，每个 Stage 包含一组窄依赖的操作，Stage 之间通过 Shuffle 进行连接
 
 
 ### Spark SQL
 
-
 **RDD vs DataFrame/Dataset (数据抽象选择):**
 
 > Dataset 是为了解决 Dataframe 类型安全问题而提出的，使用 Dataset 在编译阶段可以提前暴露错误
 
-
-| 特性           | RDDs (弹性分布式数据集)                                      | DataFrame & Dataset (数据帧/数据集)                                     |
-| -------------- | ------------------------------------------------------------ | -------------------------------------------------------------------- |
-| **选择建议**     | **非结构化数据，函数式编程，需极致灵活 => RDDs**                    | **结构化数据，性能优先，SQL 分析 => DataFrame/Dataset**                  |
-| **核心思想**     | **灵活性 (Flexibility)**                                      | **性能 & 易用性 (Performance & Ease of Use)**                                |
+| 特性           | RDDs (弹性分布式数据集)      | DataFrame & Dataset (数据帧/数据集)    |
+| -------------- | -------------- | -------------- |
+| **选择建议**     | **非结构化数据，函数式编程，需极致灵活 => RDDs**    | **结构化数据，性能优先，SQL 分析 => DataFrame/Dataset**  |
+| **核心思想**     | **灵活性 (Flexibility)**                       | **性能 & 易用性 (Performance & Ease of Use)**   |
 | **总结**         | **RDD 灵活但需手动调优，DataFrame/Dataset 性能更优且易用 (结构化数据场景)** | **"能用 SQL 解决的，就不用 RDD； SQL 解决不了的， 再用 RDD 补充"**                  |
-
 
 
 **Spark SQL 优势 vs 劣势:**
@@ -104,7 +106,6 @@ published: true
 
 
 ### Spark Streaming
-
 
 **数据接入方式:**
 

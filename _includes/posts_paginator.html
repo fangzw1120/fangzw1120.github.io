@@ -1,3 +1,9 @@
+{% comment %}
+<!-- 遍历所有文章（包括子文件夹中的文章）
+     paginator.posts 会自动包含 _posts 目录下所有层级的 markdown 文件
+     前提是这些文件都包含正确的 front matter (YAML头部设置)
+-->
+{% endcomment %}
 {% for post in paginator.posts %}
   <a href="{{ post.url }}">
       <li class="fadeInUp animated">
@@ -9,11 +15,17 @@
               <!-- {% if post.subtitle %} -->
               <h2 class="post-subtitle">{{ post.subtitle }}</h2>
               <!-- {% endif %} -->
+              {% comment %}
+              <!-- 如果文章没有副标题，则显示文章摘要 -->
+              {% endcomment %}
               {% if post.subtitle.size==0 or post.subtitle==nil %}
               <p class="post-excerpt">{{ post.excerpt | strip_html | strip_newlines | truncate: 126}}</p>
               {% endif %}
           </section>
           <footer class="post-tags">
+                {% comment %}
+                <!-- 显示文章的标签和发布日期 -->
+                {% endcomment %}
                 {% if post.tags.size > 0 %}
                     {% for tag in post.tags  %}
                     <a href={{ "tags.html#" | append: tag | pretend: site.baseurl }} class="post-tag">{{ tag }}</a>

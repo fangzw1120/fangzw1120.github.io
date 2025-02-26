@@ -45,7 +45,7 @@ published: true
 **A3:** YARN 集群包含以下核心角色：
 
 *   **RM (ResourceManager): 集群大脑，资源总管，分配资源，启动 AM。** 
-*   **NM (NodeManager): 节点代理，资源执行者，汇报资源，运行 Container。** 
+*   **NM (NodeManager): 节点代理，资源执行者，汇报资源，运行 Container。负责container的生命周期。** 
 *   **AM (ApplicationMaster): 应用管家，任务调度员，申请资源，管理 Task。** 
 *   **Container: 资源容器，运行环境，隔离资源，执行 Task。** 
 *   **Client: 用户入口，作业提交者，监控作业，与 RM/AM 交互。** 
@@ -81,4 +81,9 @@ published: true
 *   **Spark 集群 (非 Standalone):**  YARN 通常是 *默认* 且 *首选* 的资源管理器 (Spark on YARN)。
 *   **MapReduce 2.x (MRv2):**  *强制性* 使用 YARN 作为资源管理器。
 
+---
 
+**Q7： 资源调度**
+*   **FIFO Scheduler**：简单先进先出
+*   **Capacity Scheduler**：多队列资源分配；支持资源抢占；适合多租户环境
+*   **Fair Scheduler**：公平资源分配；动态资源调整；支持资源池

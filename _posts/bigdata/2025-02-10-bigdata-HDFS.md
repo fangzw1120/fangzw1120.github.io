@@ -24,22 +24,27 @@ Hadoop 分布式文件系统 (HDFS) 是大数据领域的基石，为海量数�
 
 
 ### HDFS 关键角色 (理解其职责)
+    
+![25_02_10_HDFS_arch.png](../../../assets/202502/25_02_10_HDFS_arch.png)
 
 *   **客户端 (Client):**  用户接口，发起读写请求。
 *   **NameNode (NN): 名称节点 - 元数据管理者**
     *   **存储元数据 (Metadata):** 文件目录、属性、**数据块位置**。
     *   **内存存储 + 磁盘持久化:**  内存加速访问，磁盘保证可靠。
     *   **不存储数据:**  仅管理元数据信息。
+*   **SecondNameNode:** 辅助合并NameNode的日志，并且定时备份NameNode的日志用于故障恢复.
 *   **DataNode (DN): 数据节点 - 数据存储者**
     *   **存储数据块 (Data Block):**  存储文件实际数据。
     *   **提供读写服务:**  响应客户端数据读写请求。
     *   **心跳保活:**  定时向 NameNode 发送心跳。
+*   **JournalNode：** HA 模式下存储编辑日志.
 
 
 ### HDFS 数据处理 (核心机制)
 
 *   **数据块 (Block):**  文件分割成固定大小块，**默认 128MB**。
 *   **复制因子 (Replication Factor):**  数据块多副本存储，**默认 3 副本**，提高容错。
+*   **心跳间隔**：影响故障检测时间，默认 3 秒。
 
 
 ### HDFS 读写流程 (关键步骤)
@@ -55,8 +60,8 @@ Hadoop 分布式文件系统 (HDFS) 是大数据领域的基石，为海量数�
 *   **写入流程 (Client -> NameNode -> DataNode Pipeline -> NameNode):**
     1.  客户端切分文件为数据块。
     2.  客户端向 NameNode 请求数据块存储节点列表。
-    3.  客户端向首个 DataNode 写入数据，**DataNode 间建立复制管道自动复制**。
-    4.  DataNode 复制完成后逐级通知客户端。
+    3.  客户端向首个 DataNode 写入数据，**DataNode 间建立复制管道自动复制(并行)**。
+    4.  DataNode 复制完成后逐级通知客户端，串行开始下一个数据块传输。
     5.  首个 DataNode 通知 NameNode，NameNode 更新元数据。
 
     ![25_02_10_HDFS_write.png](../../../assets/202502/25_02_10_HDFS_write.png)

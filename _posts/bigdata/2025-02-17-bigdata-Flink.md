@@ -60,9 +60,7 @@ Flink Runtime 层为 Master-Slave 架构，负责作业执行和资源管理。
 
     *   **职责:** 接收作业，预处理，转发给 JobManager，提供 Web UI。
 
-*   **2.4 ResourceManager：资源协调者(yarn resource manager)**
 
-    *   **职责:** Slot 管理，资源分配回收，对接外部资源平台，TaskManager 注册和心跳监控。
 
 **3. 窗口 (Windows) 机制：有界流式计算**
 
