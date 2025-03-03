@@ -11,20 +11,64 @@ description:
 <main>
     {% include title.html %}
     <ul class="ex-list">
+        <!-- 
+            这个li元素是用来展示时间轴列表的，id="pc" 表示这个部分是为电脑(PC)端设计的。
+            fadeInUp 和 animated 是CSS动画的类名，用于实现进入页面的动画效果。
+        -->
         <li  class="fadeInUp animated" id="pc">
+          <!-- 
+              这个 for 循环是 Jekyll 模板引擎的语法，它会遍历站点中所有的文章 (site.posts)。
+              每篇文章会生成一个时间轴上的项目。
+          -->
           {% for post in site.posts %}
+            <!-- 
+                这个 div 包含时间轴左侧的时间部分。
+                每个文章对应时间轴上的一个时间点。
+            -->
             <div class="left-time">
+              <!--
+                 这是一个超链接标签（a），点击不会跳转，因为href="javascript:;"。
+                 onmouseover 和 onmouseout 是鼠标事件，分别表示鼠标悬停和移出时的动作。
+                 在这里，这两个事件用于改变时间和时间轴线条的样式，实现鼠标悬停时的交互效果。
+              -->
               <a href="javascript:;" onmouseover="this.children[0].style.borderLeft='8px solid rgb(255,90,90)'; this.children[1].style.backgroundColor='rgb(255,90,90)';this.children[1].children[0].children[0].style.color='white';" onmouseout="this.children[0].style.borderLeft='8px solid #f4f4f4'; this.children[1].style.backgroundColor='#f4f4f4';this.children[1].children[0].children[0].style.color='#555';">
+                <!-- 
+                    righttime-san：时间轴左侧的竖线。
+                    righttime-main：显示时间的背景区域。
+                -->
                 <span class="righttime-san"></span><span class="righttime-main"><sapn class="timemain">
+                    <!--
+                        time 标签用于表示时间信息。
+                        post-date 和 timefont 是 CSS 类名，用于设置时间和字体样式。
+                        datetime 属性：为计算机提供标准格式的时间，方便搜索引擎识别。
+                        {{ post.date | date:"%y-%m-%d" }}：Jekyll 模板语法，将文章日期格式化为 "年-月-日" 的形式，只显示两位数的年份。
+                        {{ post.date | date: "%Y-%m-%d" }}：Jekyll 模板语法，将文章日期格式化为 "年-月-日" 的形式，显示完整的年份。
+                    -->
                     <time class="post-date timefont" datetime="{{ post.date | date:"%y-%m-%d" }}">{{ post.date | date: "%Y-%m-%d" }}</time>
                 </sapn></span>
               </a>
             </div>
+            <!--
+                这个 div 包含时间轴右侧的文章标题（或副标题）。
+                它对应着左侧时间点所对应的具体文章。
+            -->
             <div class="right-name">
+              <!--
+                这是一个超链接标签（a），点击会跳转到对应的文章页面。
+                href="{{ post.url }}"：Jekyll 模板语法，表示文章的链接地址。
+                onmouseover 和 onmouseout 是鼠标事件，实现鼠标悬停时标题部分的样式变化。
+              -->
               <a href="{{ post.url }}" onmouseover="this.children[0].style.borderRight='8px solid rgb(154,133,255)'; this.children[1].style.backgroundColor='rgb(154,133,255)';this.children[1].children[0].style.color='white';this.children[1].children[0].style.fontWeight='bold';" onmouseout="this.children[0].style.borderRight='8px solid #f4f4f4'; this.children[1].style.backgroundColor='#f4f4f4';this.children[1].children[0].style.color='#555';this.children[1].children[0].style.fontWeight='normal';">
+                <!--
+                    lefttime-san：时间轴右侧的竖线。
+                    lefttime-main：显示文章标题的背景区域。
+                -->
                 <span class="lefttime-san"></span>
                 <span class="lefttime-main">
                   <sapn class="timemain">
+                    <!--
+                        {{ post.subtitle }}：Jekyll 模板语法，表示文章的副标题，会在时间轴上显示。
+                    -->
                     {{ post.subtitle }}
                   </sapn>
                 </span>
@@ -33,9 +77,25 @@ description:
           {% endfor %}
         </li>
 
+        <!--
+            这个li元素也是用来展示时间轴列表的，id="media" 表示这个部分是为移动(手机)端设计的。
+            fadeInUp 和 animated 同上，是CSS动画的类名。
+        -->
         <li  class="fadeInUp animated" id="media">
+          <!-- 同上，for循环遍历所有文章。 -->
           {% for post in site.posts %}
+            <!--
+              这个 div 包含了手机端时间轴上，文章的标题和日期。
+            -->
             <div class="timeANDname">
+              <!--
+                手机端时间轴上每个文章条目的链接。
+                timeANDname-san：左侧竖线。
+                timeANDname-main：整体背景。
+                timeANDnamemain：内容部分。
+                timeline-data：在手机端显示的日期，格式与电脑端一致。
+                post.url: Jekyll 模板语法，文章的URL。
+              -->
               <a href="{{ post.url }}"><span class="timeANDname-san"></span><span class="timeANDname-main"><sapn class="timeANDnamemain">
                   {{ post.subtitle }}
                   <time class="timeline-data" datetime="{{ post.date | date:"%y-%m-%d" }}">{{ post.date | date: "%Y-%m-%d" }}</time>

@@ -10,6 +10,10 @@
             <a href="/page{{ paginator.previous_page }}/" class="page-link" title="Previous Page">&laquo;</a>
         {% endif %}
     {% endif %}
+    {% if paginator.total_pages > 2 and paginator.page > 1 and paginator.page < paginator.total_pages %}
+        <!-- 如果总页数大于2，并且当前页既不是首页也不是尾页，则显示当前页码 -->
+        <a href="/page{{ paginator.page }}/" class="page-link" title="Current Page">{{ paginator.page }}</a>
+    {% endif %}
     {% if paginator.next_page %}
         <!-- {% if paginator.next_page == 1 %}
             <a href="{{ "/" | relative_url }}" class="page-link" title="Next Page">\</a>

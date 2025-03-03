@@ -3,18 +3,21 @@ layout: post
 title: "foris's blog"
 date: 2025-02-17
 author: forisfang 
-color: rgb(255,90,90)
+color: rgb(167,197,235)  # 莫兰迪蓝色 - 温和优雅的天空蓝
 tags: bigdata 
 subtitle: 'Big Data - Flink'
 published: true
 ---
 
 
-**Flink 核心技术精要：API、架构、窗口与状态**
+### 简介
+*   分层API、SQL-DataSet-Stateful Stream
+*   JobManager(AM+RM)、TaskManager(NM)、Dispatcher(作业提交入口)
+*   窗口(滑动滚动绘画全局、Watermark)、状态也就是中间结果(算子状态、键控状态）、容错性（checkpoint、savepoint）
 
-Apache Flink 是领先的实时计算框架，以高性能、强功能和灵活 API 著称。本文精炼 Flink 的核心技术：API 架构、运行时架构、窗口机制和状态管理。
 
-**1. 分层 API 架构：灵活易用**
+
+### **分层 API 架构**
 
 ![25_02_17_Flink_api](../../../assets/202502/25_02_17_Flink_api.png)
 
@@ -35,7 +38,12 @@ Flink 提供分层 API，兼顾易用性与灵活性：
     *   **特点:** 最底层 API，Process Function 内嵌 DataStream API，细粒度控制时间/状态。
     *   **优势:** 极致灵活，实现高级流处理模式，适用于性能和灵活性极致要求的场景。
 
-**2. Runtime 层架构：Master-Slave 结构**
+
+
+
+
+
+### **Master-Slave 结构**
 
 Flink Runtime 层为 Master-Slave 架构，负责作业执行和资源管理。
 
@@ -60,9 +68,12 @@ Flink Runtime 层为 Master-Slave 架构，负责作业执行和资源管理。
 
     *   **职责:** 接收作业，预处理，转发给 JobManager，提供 Web UI。
 
+*   **2.4 客户端 (Client)：**  
+    *   作业提交入口，负责 **作业提交** (代码上传)， **作业监控** (状态查看)，和 **结果获取** (数据接收)。
 
 
-**3. 窗口 (Windows) 机制：有界流式计算**
+
+### **窗口 (Windows) 机制**
 
 Flink 窗口将无限流切分为有界窗口，进行有界计算。分为时间窗口和计数窗口。
 
@@ -78,7 +89,9 @@ Flink 窗口将无限流切分为有界窗口，进行有界计算。分为时�
     *   **滚动计数窗口 (Tumbling Count Windows):**  固定元素数量触发，无重叠。`countWindow(1000)`
     *   **滑动计数窗口 (Sliding Count Windows):**  固定元素数量窗口，滑动步长控制频率。 `countWindow(1000, 10)`
 
-**4. 状态 (State) 管理：有状态计算核心**
+
+
+### **状态 (State) 管理**
 
 Flink 支持有状态计算，跨事件维护和访问数据。分为算子状态和键控状态。
 
@@ -103,3 +116,5 @@ Flink 支持有状态计算，跨事件维护和访问数据。分为算子状�
     *   **FsStateBackend:**  内存 + 文件系统，兼顾性能可靠性，中等容量，生产环境可选。
     *   **RocksDBStateBackend:**  RocksDB 磁盘存储，高可靠，海量容量，生产环境常用，性能相对内存稍慢。
 
+*   **4.3 容错机制 (Fault Tolerance)：**  
+    *   基于 **检查点 (Checkpoint)** 和 **保存点 (Savepoint)** 实现容错，结合 **故障恢复** 策略，保证 **精确一次 (Exactly-Once)** 的数据处理语义。

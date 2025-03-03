@@ -284,19 +284,22 @@ a{
 .page-links{
   /*background-color: blue;*/
   height: 60px;
-  width: 120px;
+  width: 180px; /* 增加宽度从120px到180px */
   border: 1px solid #e7eaf1;
   border-radius: 3px;
   margin: 0 auto;
   padding: 0 10px;
+  display: flex; /* 添加flex布局 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
 }
 .page-link{
   display: block;
   height: 40px;
   width: 40px;
-  /*background-color: red;*/
+/*background-color: red;*/
   float: left;
-  margin: 10px;
+  margin: 10px 5px; /* 减小左右margin从10px到5px */
   font-size: 30px;
   line-height: 35px;
   text-align: center;

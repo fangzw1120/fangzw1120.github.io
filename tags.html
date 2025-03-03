@@ -11,17 +11,48 @@ description:
 <main>
     {% include title.html %}
     <ul class="ex-list">
+        <!-- 
+            这个列表项显示所有标签的链接。
+            fadeInUp 和 animated 是 CSS 动画类名，用于创建动画效果。
+        -->
         <li class="fadeInUp animated">
+        <!-- 
+            Jekyll 语法，检查是否有标签存在 (site.tags.size > 0)。
+        -->
         {% if site.tags.size>0 %}
+            <!-- 
+                这个循环遍历所有标签 (site.tags)。
+                site.tags 的结构是一个数组，每个元素是一个包含标签名称和相关文章的数组。
+                tag[0] 表示标签的名称。
+            -->
             {% for tag in site.tags %}
-            <a href="#{{ tag[0] }}" class="tag">{{ tag[0]}}</a>
+            <!-- 
+                创建一个指向对应标签文章列表的链接。
+                href="#{{ tag[0] }}"：创建一个指向页面中 id="{{ tag[0] }}" 元素的锚点链接。
+            -->
+            <a href="#{{ tag[0] }}" class="tag">{{ tag[0]}}  ({{ tag[1] | size }})</a>
             {% endfor %}
         {% endif %}
         </li>
+        <!--
+            这个循环遍历每个标签，并显示该标签下的文章。
+        -->
         {% for tag in site.tags %}
         <li>
+            <!-- 
+                显示标签名称，id="{{ tag[0] }}" 用于创建锚点，与上面的链接相对应。
+            -->
             <span class="tag-name" id="{{ tag[0] }}">「{{ tag[0] }}」</span>
+            <!-- 
+                这个循环遍历当前标签下的所有文章 (tag[1])。
+                tag[1] 是一个包含所有属于该标签的文章的数组。
+            -->
             {% for post in tag[1] %}
+            <!-- 
+                创建一个指向文章的链接。
+                post.url：文章的URL地址 (Jekyll变量)。
+                post.subtitle：文章的副标题 (Jekyll变量)。
+            -->
             <a class="tag-post" href="{{ post.url }}" title="{{ post.subtitle }}">{{ post.subtitle }}</a>
             {% endfor %}
         </li>

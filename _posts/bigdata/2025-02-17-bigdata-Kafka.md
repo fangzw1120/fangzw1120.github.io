@@ -3,17 +3,18 @@ layout: post
 title: "foris's blog"
 date: 2025-02-17
 author: forisfang 
-color: rgb(255,90,90)
+color: rgb(167,197,235)  # 莫兰迪蓝色 - 温和优雅的天空蓝
 tags: bigdata 
 subtitle: 'Big Data - Kafka'
 published: true
 ---
 
 
-## 高性能消息队列
-高性能分布式流处理平台，消息队列
-
-部署的时候一定要依赖zookeeper或者raft
+### 简介
+*   高性能分布式消息队列、依赖zookeeper或者raft、顺序写、零拷贝、内存映射磁盘、pull（允许阻塞等待消息）
+*   一个topic多个partition、partition有序、partition对应group单consumer、分区/consumer触发rebalance 
+*   多partition在不同broker，partition有leader/follower多副本
+*   三种时间语义；ack+重试+幂等保证生产可靠性、事务+手动commit保证消费可靠性；日志收集，用户行为分析，实时监控，流式计算
 
 
 ### 核心优势
@@ -22,8 +23,15 @@ published: true
 *   **零拷贝**:  `sendfile` 减少数据拷贝，提升网络传输效率。
 *   **消息拉取**:  消费者主动拉取，灵活控制消费速率，利于批量处理。
 
+**局限性**
+*   **实时性**:  准实时，非极致实时。
+*   **协议支持**:  原生不支持 MQTT，需网关转换。
+*   **全局有序**:  仅 Partition 内有序， Topic 全局无序。
+*   **监控**:  原生监控弱，需插件增强。
+*   **依赖**:  早期版本依赖 ZooKeeper (运维复杂，单点风险)，新版本 Kraft 模式尝试移除。
 
-### Kafka 消息特性极简对比
+
+### Kafka 消息特性对比
 > RocketMQ nameserver：充当元数据的中心，负责维护Broker的注册信息、Topic的路由信息
 
 > RocketMQ controller：协调和管理整个RocketMQ集群的工作
@@ -44,7 +52,7 @@ published: true
 | **消息容错**   | **跳过+自建死信**  | **原生死信队列**   | **原生死信队列**     | **死信队列**: 自建 vs 原生支持         |
 | **消息时序**   | **Topic TTL**      | **消息 TTL，延迟消息** | **消息/队列 TTL**   | **时序控制**: 功能丰富度             |
 | **消息留存**   | **根据保留时间、大小的配置项批量清除(覆盖)**   | **删除**       | **删除/转发死信**   | **删除策略**: 覆盖 vs 删除 vs 转发     |
-| **重复消费**   | **手动 Commit/幂等** | **手动 Commit/幂等** | **手动 Ack/幂等** | **保证方式**: 消费者手动commit+消费端幂等    |
+| **重复消费**   | **手动 Commit/幂等** | **手动 Commit/幂等** | **手动 Ack/幂等** | **保证方式**: 消费者手动commit+消费端幂等+消费事务    |
 | **消息可靠性** | **生产者消息ACK+副本**  | **生产者消息ACK+Broker 备份** | **生产者消息ACK+持久化+镜像** | **可靠性保障**: 生产者ACK+持久化+失败重试+生产端id幂等(redis的set保证id幂等，或者mysql的主键保证)              |
 
 
@@ -56,7 +64,7 @@ published: true
 *   **Consumer Group**: 消费者组，组内消费者共享 Topic 消息。
 *   **分布式事务**:  跨 Partition 原子性写入。
 *   **批量/流处理**:  批量收发，内建流处理能力 (Kafka Streams)。
-*   **Rebalance**: 分区/消费者变化触发重平衡rebalance，影响消费性能。(topic所有消费者实例都会停止工作，等待Rebalance过程完成)
+*   **Rebalance**: 分区/消费者变化触发重平衡rebalance，影响消费性能。(topic所有消费者实例都会停止工作，等待Rebalance过程完成, 替代方案创建新 Topic 并迁移数据)
 
 > 分区策略：首分区首副本随机 Broker。后续分区首副本轮询 Broker list。分区的其他副本按照举例首副本的 `nextReplicaShift` 来决定Broker位置。
 
@@ -73,14 +81,14 @@ published: true
 ### 消息投递语义
 *   **最多一次 (At-Most Once)**:  *快，但可能丢消息* (类似 UDP)。
 
-> Producer 发送消息后不等待 Broker 确认， Consumer 自动提交 Offset。
+     Producer 发送消息后不等待 Broker 确认， Consumer 自动提交 Offset。
 
 *   **最少一次 (At-Least Once)**:  *可靠，但可能重复* (超时重试 + ACK)。
 
-> Producer 等待 Broker 确认 (acks=all)， Consumer 先处理消息，后手动提交 Offset。
+     Producer 等待 Broker 确认 (acks=all)， Consumer 先处理消息，后手动提交 Offset。
 
 *   **恰好一次 (Exactly Once)**:  *最可靠，且不重复* (事务 + 幂等，性能略低)。
 
-> Kafka 通过 **幂等 Producer** 和 **事务 Consumer
+     Kafka 通过 **幂等 Producer** 和 **事务 Consumer**
 
 

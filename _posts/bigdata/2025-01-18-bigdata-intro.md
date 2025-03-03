@@ -3,29 +3,35 @@ layout: post
 title: "foris's blog"
 date: 2025-01-18
 author: forisfang 
-color: rgb(255,90,90)
-# cover: 'http://on2171g4d.bkt.clouddn.com/jekyll-banner.png'
+color: rgb(167,197,235)  # 莫兰迪蓝色 - 温和优雅的天空蓝
+# color: rgb(232,198,198)  # 莫兰迪粉色 - 另一个选择
+# color: rgb(193,206,185)  # 莫兰迪绿色 - 第三个选择
 tags: bigdata 
 subtitle: 'Big Data Intro'
 published: true
 ---
 
-## 大数据处理流程
+### 处理流程
 
 > 数据采集 - 数据处理 - 数据应用
 
-在数据处理流程，可以分为批处理：数据存储 - 离线处理 - 数据存储；流处理：流式处理 - 数据存储。
+批处理：数据存储 - 离线处理 - 数据存储
 
-## 大数据框架
+流处理：流式处理 - 数据存储
+
+### 框架
 
 ![25_01_18_bdi_1.png](../../../assets/25_01_18_bdi_1.png)
 
+### 组件
+
 #### 数据采集
 + Flume
-> flume 来自于文件、端口、kafka，输出hdfs、kafka、es；和logstash区别只是没有hdfs；瓶颈在于写入sink，分布式
+> source、sink支持主流组件，hadoop生态友好，分布式采集、事务性channel保障可靠性；瓶颈在于写入sink或者channel；
 + Logstash
-> 社区活跃、支持的插件丰富、插件化的编排，瓶颈在于filter，集中式pipeline
+> 插件丰富、插件化的编排，集中式pipeline，支持复杂的filter处理逻辑；瓶颈在于复杂的filter消耗
 + Filebeat
+> 部署于数据生成端，agent模式，轻量化采集，数据采集到队列或者其他组件
 
 #### 数据迁移
 + Sqoop

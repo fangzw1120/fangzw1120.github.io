@@ -3,7 +3,7 @@ layout: post
 title: "foris's blog"
 date: 2025-02-17
 author: forisfang 
-color: rgb(255,90,90)
+color: rgb(167,197,235)  # 莫兰迪蓝色 - 温和优雅的天空蓝
 tags: bigdata 
 subtitle: 'Big Data - Storm'
 published: true
